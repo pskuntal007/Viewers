@@ -12,6 +12,7 @@ import { useAppConfig } from '@state';
 import { useDebounce, useQuery } from '@hooks';
 import { utils, hotkeys } from '@ohif/core';
 
+//importing functions from ohif/ui
 import {
   Icon,
   StudyListExpandedRow,
@@ -111,6 +112,7 @@ function WorkList({
   const [studiesWithSeriesData, setStudiesWithSeriesData] = useState([]);
   const numOfStudies = studiesTotal;
 
+  //page number changing
   const setFilterValues = val => {
     if (filterValues.pageNumber === val.pageNumber) {
       val.pageNumber = 1;
@@ -134,6 +136,7 @@ function WorkList({
     setFilterValues({ ...filterValues, pageNumber: newPageNumber });
   };
 
+  //results per page
   const onResultsPerPageChange = newResultsPerPage => {
     setFilterValues({
       ...filterValues,
