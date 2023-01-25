@@ -41,7 +41,9 @@ const seriesInStudiesMap = new Map();
  * TODO:
  * - debounce `setFilterValues` (150ms?)
  */
-function WorkList({
+
+//building worklist function
+function WorkList({ //passing parameters
   data: studies,
   dataTotal: studiesTotal,
   isLoadingData,
@@ -71,7 +73,7 @@ function WorkList({
    * The default sort value keep the filters synchronized with runtime conditional sorting
    * Only applied if no other sorting is specified and there are less than 101 studies
    */
-
+//sorting
   const canSort = studiesTotal < STUDIES_LIMIT;
   const shouldUseDefaultSort = sortBy === '' || !sortBy;
   const sortModifier = sortDirection === 'descending' ? 1 : -1;
@@ -253,6 +255,8 @@ function WorkList({
       moment(time, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).isValid() &&
       moment(time, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).format('hh:mm A');
 
+      //giving operations to be performed on study rows
+      //TooltipClipboard: providing copy-paste options and mouseover effects
     return {
       row: [
         {
@@ -337,7 +341,7 @@ function WorkList({
               : []
           }
         >
-          {appConfig.modes.map((mode, i) => {
+          {appConfig.modes.map((mode, i) => { //assigning mode(default/other)
             const isFirst = i === 0;
 
             const isValidMode = mode.isValidMode({ modalities });
@@ -377,10 +381,11 @@ function WorkList({
     };
   });
 
-  const hasStudies = numOfStudies > 0;
-  const versionNumber = process.env.VERSION_NUMBER;
-  const buildNumber = process.env.BUILD_NUM;
+  const hasStudies = numOfStudies > 0; //if no. of studies>0
+  const versionNumber = process.env.VERSION_NUMBER; //version number of OHIF Viewer
+  const buildNumber = process.env.BUILD_NUM; //build number of OHIF Viewer
 
+  //providing settings: about(OHIF Viewer, version and build numbers) and prefrences(language and hotkeys)
   const menuOptions = [
     {
       title: t('Header:About'),
@@ -432,19 +437,20 @@ function WorkList({
     });
   }
 
+  //The return statement ends function execution and specifies a value to be returned to the function caller.
   return (
     <div
       className={classnames('bg-black h-full', {
         'h-screen': !hasStudies,
       })}
     >
-      <Header
+      <Header //applying header options
         isSticky
         menuOptions={menuOptions}
         isReturnEnabled={false}
         WhiteLabeling={appConfig.whiteLabeling}
       />
-      <StudyListFilter
+      <StudyListFilter //applying studies filters
         numOfStudies={pageNumber * resultsPerPage > 100 ? 101 : numOfStudies}
         filtersMeta={filtersMeta}
         filterValues={{ ...filterValues, ...defaultSortValues }}
@@ -455,18 +461,18 @@ function WorkList({
       {hasStudies ? (
         <>
           <StudyListTable
-            tableDataSource={tableDataSource.slice(offset, offsetAndTake)}
-            numOfStudies={numOfStudies}
-            filtersMeta={filtersMeta}
+            tableDataSource={tableDataSource.slice(offset, offsetAndTake)} //showing studies data
+            numOfStudies={numOfStudies} //showing total no. of studies
+            filtersMeta={filtersMeta} //filters and conditions on study fields
           />
           <StudyListPagination
-            onChangePage={onPageNumberChange}
-            onChangePerPage={onResultsPerPageChange}
-            currentPage={pageNumber}
-            perPage={resultsPerPage}
+            onChangePage={onPageNumberChange} //changing page
+            onChangePerPage={onResultsPerPageChange} //no. of studies per page
+            currentPage={pageNumber} //showing page no.
+            perPage={resultsPerPage} //showing given no. of studies
           />
         </>
-      ) : (
+      ) : ( //showing loading indicator while studies are loading
         <div className="flex flex-col items-center justify-center pt-48">
           {appConfig.showLoadingIndicator && isLoadingData ? (
             <LoadingIndicatorProgress className={'w-full h-full bg-black'} />
@@ -479,6 +485,7 @@ function WorkList({
   );
 }
 
+//Typechecking With PropTypes
 WorkList.propTypes = {
   data: PropTypes.array.isRequired,
   dataSource: PropTypes.shape({
@@ -487,6 +494,7 @@ WorkList.propTypes = {
   isLoadingData: PropTypes.bool.isRequired,
 };
 
+//defining default values for filters
 const defaultFilterValues = {
   patientName: '',
   mrn: '',
@@ -504,6 +512,7 @@ const defaultFilterValues = {
   datasourcename: '',
 };
 
+//parsing str values into int values
 function _tryParseInt(str, defaultValue) {
   let retValue = defaultValue;
   if (str !== null) {
@@ -516,6 +525,7 @@ function _tryParseInt(str, defaultValue) {
   return retValue;
 }
 
+//geting query parameters and deleting null values
 function _getQueryFilterValues(query) {
   const queryFilterValues = {
     patientName: query.get('patientName'),
@@ -544,6 +554,7 @@ function _getQueryFilterValues(query) {
   return queryFilterValues;
 }
 
+//sorting dates making them strings
 function _sortStringDates(s1, s2, sortModifier) {
   // TODO: Delimiters are non-standard. Should we support them?
   const s1Date = moment(s1.date, ['YYYYMMDD', 'YYYY.MM.DD'], true);
