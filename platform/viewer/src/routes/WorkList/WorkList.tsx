@@ -32,7 +32,6 @@ import {
 import i18n from '@ohif/i18n';
 
 const { sortBySeriesDate } = utils;
-
 const { availableLanguages, defaultLanguage, currentLanguage } = i18n;
 
 const seriesInStudiesMap = new Map();
@@ -43,7 +42,8 @@ const seriesInStudiesMap = new Map();
  */
 
 //building worklist function
-function WorkList({ //passing parameters
+function WorkList({
+  //passing parameters
   data: studies,
   dataTotal: studiesTotal,
   isLoadingData,
@@ -67,13 +67,14 @@ function WorkList({ //passing parameters
   });
 
   const debouncedFilterValues = useDebounce(filterValues, 200);
+  //console.log("00000000", debouncedFilterValues)
   const { resultsPerPage, pageNumber, sortBy, sortDirection } = filterValues;
 
   /*
    * The default sort value keep the filters synchronized with runtime conditional sorting
    * Only applied if no other sorting is specified and there are less than 101 studies
    */
-//sorting
+  //sorting
   const canSort = studiesTotal < STUDIES_LIMIT;
   const shouldUseDefaultSort = sortBy === '' || !sortBy;
   const sortModifier = sortDirection === 'descending' ? 1 : -1;
@@ -113,6 +114,7 @@ function WorkList({ //passing parameters
   const [expandedRows, setExpandedRows] = useState([]);
   const [studiesWithSeriesData, setStudiesWithSeriesData] = useState([]);
   const numOfStudies = studiesTotal;
+  //console.log("00000001", numOfStudies)
 
   //page number changing
   const setFilterValues = val => {
@@ -164,9 +166,12 @@ function WorkList({ //passing parameters
     const queryString = {};
     Object.keys(defaultFilterValues).forEach(key => {
       const defaultValue = defaultFilterValues[key];
+      //console.log("00000002", defaultValue);
       const currValue = debouncedFilterValues[key];
+      //console.log("00000003", currValue);
 
       // TODO: nesting/recursion?
+      //console.log("00000004", key);
       if (key === 'studyDate') {
         if (
           currValue.startDate &&
@@ -184,10 +189,12 @@ function WorkList({ //passing parameters
       }
     });
 
+    //search parameters in worklist page
     const search = qs.stringify(queryString, {
       skipNull: true,
       skipEmptyString: true,
     });
+    //console.log("00000005", search);
 
     navigate({
       pathname: '/',
@@ -196,7 +203,7 @@ function WorkList({ //passing parameters
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilterValues]);
 
-  // Query for series information
+  // Query for series information as per studyInstanceUid
   useEffect(() => {
     const fetchSeries = async studyInstanceUid => {
       try {
@@ -207,11 +214,13 @@ function WorkList({ //passing parameters
         // TODO: UI Notification Service
         console.warn(ex);
       }
+      //console.log("00000006", studyInstanceUid);
     };
 
     // TODO: WHY WOULD YOU USE AN INDEX OF 1?!
     // Note: expanded rows index begins at 1
     for (let z = 0; z < expandedRows.length; z++) {
+      //console.log("00000007", expandedRows);
       const expandedRowIndex = expandedRows[z] - 1;
       const studyInstanceUid = sortedStudies[expandedRowIndex].studyInstanceUid;
 
@@ -228,10 +237,14 @@ function WorkList({ //passing parameters
     return !isEqual(filterValues, defaultFilterValues);
   };
 
+  //getting right page number
   const rollingPageNumberMod = Math.floor(101 / resultsPerPage);
   const rollingPageNumber = (pageNumber - 1) % rollingPageNumberMod;
   const offset = resultsPerPage * rollingPageNumber;
   const offsetAndTake = offset + resultsPerPage;
+
+
+  //info about study data, providing copy-paste options, onclick events and mouseover effects
   const tableDataSource = sortedStudies.map((study, key) => {
     const rowKey = key + 1;
     const isExpanded = expandedRows.some(k => k === rowKey);
@@ -246,6 +259,8 @@ function WorkList({ //passing parameters
       date,
       time,
     } = study;
+    //study has whole data of all studies
+    //console.log("00000008", study);
     const studyDate =
       date &&
       moment(date, ['YYYYMMDD', 'YYYY.MM.DD'], true).isValid() &&
@@ -255,8 +270,8 @@ function WorkList({ //passing parameters
       moment(time, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).isValid() &&
       moment(time, ['HH', 'HHmm', 'HHmmss', 'HHmmss.SSS']).format('hh:mm A');
 
-      //giving operations to be performed on study rows
-      //TooltipClipboard: providing copy-paste options and mouseover effects
+    //giving operations to be performed on study rows
+    //TooltipClipboard: providing copy-paste options and mouseover effects
     return {
       row: [
         {
@@ -341,7 +356,8 @@ function WorkList({ //passing parameters
               : []
           }
         >
-          {appConfig.modes.map((mode, i) => { //assigning mode(default/other)
+          {appConfig.modes.map((mode, i) => {
+            //assigning mode(default/other)
             const isFirst = i === 0;
 
             const isValidMode = mode.isValidMode({ modalities });
@@ -380,6 +396,7 @@ function WorkList({ //passing parameters
       isExpanded,
     };
   });
+  //console.log("00000008", tableDataSource);
 
   const hasStudies = numOfStudies > 0; //if no. of studies>0
   const versionNumber = process.env.VERSION_NUMBER; //version number of OHIF Viewer
@@ -472,7 +489,8 @@ function WorkList({ //passing parameters
             perPage={resultsPerPage} //showing given no. of studies
           />
         </>
-      ) : ( //showing loading indicator while studies are loading
+      ) : (
+        //showing loading indicator while studies are loading
         <div className="flex flex-col items-center justify-center pt-48">
           {appConfig.showLoadingIndicator && isLoadingData ? (
             <LoadingIndicatorProgress className={'w-full h-full bg-black'} />
