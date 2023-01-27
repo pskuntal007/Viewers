@@ -243,7 +243,6 @@ function WorkList({
   const offset = resultsPerPage * rollingPageNumber;
   const offsetAndTake = offset + resultsPerPage;
 
-
   //info about study data, providing copy-paste options, onclick events and mouseover effects
   const tableDataSource = sortedStudies.map((study, key) => {
     const rowKey = key + 1;
@@ -282,7 +281,7 @@ function WorkList({
           ) : (
             <span className="text-gray-700">(Empty)</span>
           ),
-          gridCol: 4,
+          gridCol: 3,
         },
         {
           key: 'mrn',
@@ -298,23 +297,23 @@ function WorkList({
             </>
           ),
           title: `${studyDate || ''} ${studyTime || ''}`,
-          gridCol: 5,
+          gridCol: 4,
         },
         {
           key: 'description',
           content: <TooltipClipboard>{description}</TooltipClipboard>,
-          gridCol: 4,
+          gridCol: 5,
         },
         {
           key: 'sex',
           content: <TooltipClipboard>{sex}</TooltipClipboard>,
-          gridCol: 4,
+          gridCol: 2,
         },
         {
           key: 'modality',
           content: modalities,
           title: modalities,
-          gridCol: 3,
+          gridCol: 2,
         },
         {
           key: 'accession',
