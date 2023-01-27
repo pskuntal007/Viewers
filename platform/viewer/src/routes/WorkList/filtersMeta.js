@@ -28,6 +28,13 @@ const filtersMeta = [
     gridCol: 4,
   },
   {
+    name: 'Sex',
+    displayName: 'Sex',
+    inputType: 'Text',
+    isSortable: true,
+    gridCol: 4,
+  },
+  {
     name: 'modalities',
     displayName: 'Modality',
     inputType: 'MultiSelect',

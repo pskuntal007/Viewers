@@ -13,6 +13,7 @@ export default class StaticWadoClient extends api.DICOMwebClient {
     PatientName: '00100010',
     '00100020': 'mrn',
     StudyDescription: '00081030',
+    Sex: '00100040',
     StudyDate: '00080020',
     ModalitiesInStudy: '00080061',
     AccessionNumber: '00080050',

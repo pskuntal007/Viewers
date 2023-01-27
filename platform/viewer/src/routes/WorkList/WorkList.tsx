@@ -256,6 +256,7 @@ function WorkList({
       description,
       mrn,
       patientName,
+      sex,
       date,
       time,
     } = study;
@@ -302,6 +303,11 @@ function WorkList({
         {
           key: 'description',
           content: <TooltipClipboard>{description}</TooltipClipboard>,
+          gridCol: 4,
+        },
+        {
+          key: 'sex',
+          content: <TooltipClipboard>{sex}</TooltipClipboard>,
           gridCol: 4,
         },
         {
@@ -521,6 +527,7 @@ const defaultFilterValues = {
     endDate: null,
   },
   description: '',
+  sex: '',
   modalities: [],
   accession: '',
   sortBy: '',
@@ -553,6 +560,7 @@ function _getQueryFilterValues(query) {
       endDate: query.get('endDate'),
     },
     description: query.get('description'),
+    sex: query.get('sex'),
     modalities: query.get('modalities')
       ? query.get('modalities').split(',')
       : [],

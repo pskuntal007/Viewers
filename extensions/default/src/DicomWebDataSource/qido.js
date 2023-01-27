@@ -53,6 +53,7 @@ function processResults(qidoStudies) {
       patientName: utils.formatPN(getName(qidoStudy['00100010'])) || '',
       instances: Number(getString(qidoStudy['00201208'])) || 0, // number
       description: getString(qidoStudy['00081030']) || '',
+      sex: getString(qidoStudy['00100040']) || '',
       modalities:
         getString(
           getModalities(qidoStudy['00080060'], qidoStudy['00080061'])
